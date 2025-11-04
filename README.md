@@ -37,7 +37,7 @@ Add `mime_to_ext` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mime_to_ext = "0.1.2"
+mime_to_ext = "0.1.4"
 ```
 
 
@@ -59,4 +59,15 @@ fn main() {
         println!("No MIME type found for .png");
     }
 }
+```
+## Test
+
+```rust
+
+assert_eq!(mime_to_ext("image/png"), Some("png"));
+assert_eq!(ext_to_mime("png"), Some("image/png"));
+
+assert_eq!(mime_to_ext("foo/bar"), None);
+assert_eq!(ext_to_mime("qqq"), None);
+
 ```
