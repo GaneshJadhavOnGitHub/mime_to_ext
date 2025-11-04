@@ -13,7 +13,7 @@ Zero-dependency, `no_std` Rust crate for runtime lookup between MIME types and f
 
 > Most crates that handle MIME type lookups depend on limited datasets — often system-level `mime.types` files or small curated tables. This can lead to missing mappings.
 >
-> `mime_to_ext` eliminates these inconsistencies by combining and cleaning data from multiple independent and widely used MIME databases into a single unified dataset.
+> `mime_to_ext` eliminates this by combining and cleaning data from multiple independent and widely used MIME databases into a single unified dataset.
 >
 > The combined data ensures:
 >
