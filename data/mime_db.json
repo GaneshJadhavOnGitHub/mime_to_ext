@@ -319,6 +319,10 @@
     "application/java-archive": [
         "jar"
     ],
+    "application/javascript": [
+        "js", 
+        "mjs"
+    ],
     "application/java-serialized-object": [
         "ser"
     ],
