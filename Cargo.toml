@@ -8,7 +8,13 @@ repository = "https://github.com/GaneshJadhavOnGitHub/mime_to_ext"
 license = "MIT OR Apache-2.0"
 keywords = ["mime", "extension", "content-type", "lookup"]
 categories = ["encoding", "parser-implementations"]
-exclude = ["data/mime_db.json"]
+include = [
+    "/src",
+    "/examples",
+    "/Cargo.toml",
+    "/LICENSE-*",
+    "/data/mime_db.json",
+]
 
 [dependencies]
 serde          = { version = "1", features = ["derive"] }
