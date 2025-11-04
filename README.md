@@ -38,25 +38,25 @@ Add `mime_to_ext` to your `Cargo.toml`:
 ```toml
 [dependencies]
 mime_to_ext = "0.1"
+```
 
 
-### 🧩 Usage Example
+## Usage Example
 
 ```rust
+
 use mime_to_ext::{mime_to_ext, ext_to_mime};
 
 fn main() {
-    // Lookup the preferred file extension for a MIME type
     if let Some(ext) = mime_to_ext("image/png") {
         println!("The preferred extension for image/png is: {}", ext);
     } else {
         println!("No extension found for image/png");
     }
-
-    // Lookup the canonical MIME type for a file extension
     if let Some(mime) = ext_to_mime("png") {
         println!("The MIME type for .png is: {}", mime);
     } else {
         println!("No MIME type found for .png");
     }
 }
+```
