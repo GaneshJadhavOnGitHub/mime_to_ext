@@ -11,7 +11,7 @@ Zero-dependency, `no_std` Rust crate for runtime lookup between MIME types and f
 
 ####  Why `mime_to_ext`?
 
-> Most crates that handle MIME type lookups (like `mime_guess` or Python’s `mimetypes`) depend on limited datasets — often system-level `mime.types` files or small curated tables. This can lead to missing or inconsistent mappings across platforms.
+> Most crates that handle MIME type lookups depend on limited datasets — often system-level `mime.types` files or small curated tables. This can lead to missing mappings.
 >
 > `mime_to_ext` eliminates these inconsistencies by combining and cleaning data from multiple independent and widely used MIME databases into a single unified dataset.
 >

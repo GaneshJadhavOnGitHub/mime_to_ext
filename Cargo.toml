@@ -10,7 +10,7 @@ keywords = ["mime", "extension", "content-type", "lookup"]
 categories = ["encoding", "parser-implementations"]
 readme = "README.md"
 homepage = "https://github.com/GaneshJadhavOnGitHub/mime_to_ext"
-documentation = "https://docs.rs/mime_to_ext/0.1.0/mime_to_ext/"
+documentation = "https://docs.rs/mime_to_ext/0.1.4/mime_to_ext/"
 
 include = [
     "/src",
