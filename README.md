@@ -37,7 +37,7 @@ Add `mime_to_ext` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mime_to_ext = "0.1.4"
+mime_to_ext = "0.1.5"
 ```
 
 
