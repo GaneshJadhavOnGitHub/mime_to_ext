@@ -54,6 +54,7 @@ pub fn ext_to_mime(ext: &str) -> Option<&'static str> {
 /// ```
 /// assert!(mime_to_ext::db_status().is_ok());
 /// ```
+#[allow(clippy::result_unit_err)]
 pub fn db_status() -> Result<(), ()> {
     match cache::DB.as_ref() {
         Ok(_) => Ok(()),
