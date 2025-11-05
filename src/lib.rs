@@ -61,10 +61,16 @@ pub fn db_status() -> Result<(), ()> {
         Err(_) => Err(()),
     }
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    /// Tests that the `mime_to_ext` and `ext_to_mime` functions return
+    /// the correct values for known MIME types and extensions.
+    ///
+    /// This test ensures that the JSON database is correctly loaded
+    /// and that the lookup functions work as expected.
     #[test]
     fn lookup_works() {
         // JSON is present → must succeed
@@ -72,6 +78,10 @@ mod tests {
         assert_eq!(ext_to_mime("png"), Some("image/png"));
     }
 
+    /// Tests that the `mime_to_ext` and `ext_to_mime` functions return
+    /// `None` for unknown MIME types and extensions.
+    ///
+    /// This test ensures that the lookup functions handle unknown values correctly.
     #[test]
     fn unknown_gives_none() {
         assert_eq!(mime_to_ext("foo/bar"), None);
