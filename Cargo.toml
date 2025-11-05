@@ -1,6 +1,6 @@
 [package]
 name = "mime_to_ext"
-version = "0.1.6"
+version = "0.1.7"
 edition = "2024"
 authors = ["Ganesh Kamlakar Jadhav <ganesh.jadhav16986@gmail.com>"]
 description = "Zero-dependency runtime lookup between MIME types and file extensions"
@@ -10,7 +10,7 @@ keywords = ["mime", "extension", "content-type", "lookup"]
 categories = ["encoding", "parser-implementations"]
 readme = "README.md"
 homepage = "https://github.com/GaneshJadhavOnGitHub/mime_to_ext"
-documentation = "https://docs.rs/mime_to_ext/0.1.6/mime_to_ext/"
+documentation = "https://docs.rs/mime_to_ext/0.1.7/mime_to_ext/"
 
 include = [
     "/src",
