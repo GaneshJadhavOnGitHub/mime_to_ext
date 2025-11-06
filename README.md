@@ -1,10 +1,16 @@
 # mime_to_ext
 
+![Rust 1.85+](https://img.shields.io/badge/rust-1.85+-orange.svg)
+![no_std](https://img.shields.io/badge/no__std-compatible-green.svg)
+
+
 Zero-dependency crate for runtime lookup between MIME types and file extensions.
+
+MSRV: 1.85 (2024 edition)
 
 #### 🏷️ Crate Overview
 
-> **mime_to_ext** is a zero-dependency crate that provides a robust runtime lookup between MIME types and file extensions.
+> **mime_to_ext** is a zero-dependency `no_std` + `alloc` crate that provides a robust runtime lookup between MIME types and file extensions.
 > Unlike other crates that rely on system files or partial datasets, `mime_to_ext` offers one of the most complete MIME–extension mappings available in Rust — covering more than **1,100 MIME entries** from diverse, reputable sources.
 
 ---
@@ -13,14 +19,14 @@ Zero-dependency crate for runtime lookup between MIME types and file extensions.
 
 > Most crates that handle MIME type lookups depend on limited datasets — often system-level `mime.types` files or small curated tables. This can lead to missing mappings.
 >
-> `mime_to_ext` eliminates this by combining and cleaning data from multiple independent and widely used MIME databases into a single unified dataset.
+> `mime_to_ext` eliminates this by combining data from multiple independent and widely used MIME databases into a single unified dataset.
 >
 > The combined data ensures:
 >
-> * **Cross-platform reliability** (no dependency on system `mime.types`)
-> * **Broadest coverage** — over *1,100 verified MIME–extension pairs*
-> * **Runtime lookups** without any compilation or I/O overhead
-> * **Zero dependencies** for faster build times and minimal footprint
+> * **Cross-platform reliability** - No dependency on system `mime.types`
+> * **Broadest coverage** - Over *1,100 verified MIME–extension pairs*
+> * **Runtime lookups** - Without any compilation or I/O overhead
+> * **Zero dependencies** - For faster build times and minimal footprint
 
 ---
 
@@ -37,7 +43,7 @@ Add `mime_to_ext` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mime_to_ext = "0.1.8"
+mime_to_ext = "0.1.9"
 ```
 
 
@@ -60,7 +66,7 @@ fn main() {
     }
 }
 ```
-## Test
+### Test
 
 ```rust
 
@@ -71,3 +77,14 @@ assert_eq!(mime_to_ext("foo/bar"), None);
 assert_eq!(ext_to_mime("qqq"), None);
 
 ```
+
+## Quick Links
+
+🔗 Source code: [GitHub](https://github.com/GaneshJadhavOnGitHub/mime_to_ext)  
+📦 Rust crate: [crates.io](https://crates.io/crates/mime_to_ext)  
+📚 Documentation: [Docs.rs](https://docs.rs/mime_to_ext/latest)
+
+
+## License
+
+Licensed under either of **Apache-2.0** or **MIT** at your option.

@@ -1,14 +1,28 @@
+#![no_std]
+//! Zero-dependency, `no_std` + `alloc` lookup between MIME types and file
+//! extensions.
+//!
+//! The database is embedded once at compile time and lazily parsed on first
+//! use. All returned strings are `'static` and live for the entire program
+//! duration.
 mod cache;
+use ahash::AHasher;
+use core::hash::BuildHasherDefault;
+use hashbrown::HashMap;
+use once_cell::sync::Lazy;
 
-/// Return the **preferred** file extension (without dot) for a given MIME type.
+/// Return the preferred file extension (without leading dot) for a MIME type.
 ///
-/// Returns `None` if the MIME type is unknown **or** the database failed to load.
-/// or the MIME entry exists but contains no extensions.
+/// `None` is returned when
+/// - the MIME type is unknown,
+/// - the JSON database failed to parse, or
+/// - the entry exists but contains no extensions.
 ///
 /// # Example
 /// ```
-/// assert_eq!(mime_to_ext::mime_to_ext("image/png"), Some("png"));
-/// assert_eq!(mime_to_ext::mime_to_ext("foo/bar"), None);
+/// # use mime_to_ext::mime_to_ext;
+/// assert_eq!(mime_to_ext("image/png"), Some("png"));
+/// assert_eq!(mime_to_ext("foo/bar"), None);
 /// ```
 pub fn mime_to_ext(mime: &str) -> Option<&'static str> {
     match cache::DB.as_ref() {
@@ -17,42 +31,53 @@ pub fn mime_to_ext(mime: &str) -> Option<&'static str> {
     }
 }
 
-/// Return the **canonical** MIME type for a file extension (lower-case, no dot).
+/// Return the canonical MIME type for a file extension.
 ///
-/// Returns `None` if the extension is unknown **or** the database failed to load.
-/// (Empty extension arrays in the JSON do not affect this function.)
+/// `None` is returned when
+/// - the extension is unknown, or
+/// - the JSON database failed to parse.
+///
 /// # Example
 /// ```
-/// assert_eq!(mime_to_ext::ext_to_mime("png"), Some("image/png"));
-/// assert_eq!(mime_to_ext::ext_to_mime("QQQ"), None);
+/// # use mime_to_ext::ext_to_mime;
+/// assert_eq!(ext_to_mime("png"), Some("image/png"));
+/// assert_eq!(ext_to_mime("QQQ"), None);
 /// ```
+// Single upfront inversion is faster than scanning the map on every call.
+#[allow(clippy::type_complexity)]
 pub fn ext_to_mime(ext: &str) -> Option<&'static str> {
-    use std::sync::OnceLock;
-    static INV: OnceLock<Result<std::collections::HashMap<&'static str, &'static str>, ()>> =
-        OnceLock::new();
-    let inv = INV.get_or_init(|| match cache::DB.as_ref() {
-        Ok(db) => {
-            let mut map = std::collections::HashMap::new();
-            for (mime, exts) in db.iter() {
-                for e in exts {
-                    map.entry(e.as_str()).or_insert(mime.as_str());
+    static INV: Lazy<Result<HashMap<&'static str, &'static str, BuildHasherDefault<AHasher>>, ()>> =
+        Lazy::new(|| match cache::DB.as_ref() {
+            Ok(db) => {
+                let mut map = HashMap::with_hasher(BuildHasherDefault::<AHasher>::default());
+                for (mime, exts) in db.iter() {
+                    for e in exts {
+                        map.entry(e.as_str()).or_insert(mime.as_str());
+                    }
                 }
+                Ok(map)
             }
-            Ok(map)
-        }
-        Err(_) => Err(()),
-    });
-    match inv {
+            Err(_) => Err(()),
+        });
+
+    match &*INV {
         Ok(m) => m.get(ext).copied(),
         Err(_) => None,
     }
 }
 
-/// Returns `Ok(())` if the JSON database was loaded successfully.
-/// Returns `Err(())` if the file was malformed.
+/// Check whether the embedded JSON database was loaded successfully.
 ///
+/// Returns `Ok(())` if the database parsed correctly, or `Err(())` if the
+/// embedded JSON was malformed.
+///
+/// This is a cheap runtime test; the actual parse happens only once inside
+/// `cache::DB`.
+///
+/// # Example
 /// ```
-/// assert!(mime_to_ext::db_status().is_ok());
+/// # use mime_to_ext::db_status;
+/// assert!(db_status().is_ok());
 /// ```
 #[allow(clippy::result_unit_err)]
 pub fn db_status() -> Result<(), ()> {
