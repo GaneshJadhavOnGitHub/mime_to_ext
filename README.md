@@ -48,23 +48,23 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mime_to_ext = "0.1.10"
+mime_to_ext = "0.1.11"
 critical-section = { version = "1.2", features = ["std"] }
 ```
 ### Using in a `no_std` project
 
-Include the crate as usual and pick a critical-section backend appropriate for your target, 
-
+Include the crate as usual and pick **one** `critical-section` backend appropriate for your target:
 
 ```toml
 [dependencies]
-mime_to_ext = "0.1.10"
-# Cortex-M micro-controllers
-critical-section = { version = "1.2", features = ["cortex-m"] }
-
-# RISC-V with atomic emulation
-critical-section = { version = "1.2", features = ["riscv"] }
+mime_to_ext = "0.1.11"
+# Examples – choose only the line that matches your chip:
+critical-section = { version = "1.2", features = ["cortex-m"] }  # Cortex-M3/M4/M7
+critical-section = { version = "1.2", features = ["riscv"] }    # RISC-V with atomics
 ```
+If you already use a HAL (hardware-abstraction-layer) crate for your board,
+you usually don’t need to add anything—your HAL already enables the correct
+`critical-section` backend.
 
 ## Usage Example (std project)
 
