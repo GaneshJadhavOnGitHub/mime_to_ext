@@ -42,17 +42,31 @@ MSRV: 1.85 (2024 edition)
 ---
 
 
-## Usage
+### Using in a `std` project
 
-Add `mime_to_ext` to your `Cargo.toml`:
+Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
 mime_to_ext = "0.1.10"
+critical-section = { version = "1.2", features = ["std"] }
+```
+### Using in a `no_std` project
+
+Include the crate as usual and pick a critical-section backend appropriate for your target, 
+
+
+```toml
+[dependencies]
+mime_to_ext = "0.1.10"
+# Cortex-M micro-controllers
+critical-section = { version = "1.2", features = ["cortex-m"] }
+
+# RISC-V with atomic emulation
+critical-section = { version = "1.2", features = ["riscv"] }
 ```
 
-
-## Usage Example
+## Usage Example (std project)
 
 ```rust
 
