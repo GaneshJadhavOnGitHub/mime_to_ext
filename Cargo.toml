@@ -1,9 +1,9 @@
 [package]
 name = "mime_to_ext"
-version = "0.1.9"
+version = "0.1.10"
 edition = "2024"
 authors = ["Ganesh Kamlakar Jadhav <ganesh.jadhav16986@gmail.com>"]
-description = "Zero-dependency runtime lookup between MIME types and file extensions"
+description = "no_std MIME↔extension lookup from embedded JSON, no OS files"
 repository = "https://github.com/GaneshJadhavOnGitHub/mime_to_ext"
 license = "MIT OR Apache-2.0"
 keywords = ["mime", "extension", "content-type", "lookup"]
@@ -24,7 +24,7 @@ include = [
 serde = { version = "1", default-features = false, features = ["derive", "alloc"] }
 serde_json = { version = "1", default-features = false, features = ["alloc"] }
 once_cell = { version = "1.21", default-features = false, features = ["critical-section"] }
-hashbrown = { version = "0.14", default-features = false, features = ["serde", "ahash"] }
+hashbrown = { version = "0.14.5", default-features = false, features = ["serde", "ahash"] }
 ahash = { version = "0.8", default-features = false }
 
 [[example]]
@@ -37,3 +37,5 @@ std = []
 [dev-dependencies]
 critical-section = { version = "1.2", features = ["std"] }
 
+[build-dependencies]
+serde_json = { version = "1", default-features = false, features = ["alloc"] }

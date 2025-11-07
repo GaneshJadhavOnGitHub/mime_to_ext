@@ -14,6 +14,10 @@
 //! image/png
 //! $ cargo run --features std --example mime_to_ext -- invalid
 //! ?
+//! $ cargo run --features std --example mime_to_ext -- audio/mpeg
+//! mp3, mp1, mp2
+//! $ cargo run --features std --example mime_to_ext -- mp1
+//! audio/mpeg
 //! ```
 //!
 //! # Install locally (makes `mime_to_ext` available everywhere)
@@ -26,6 +30,8 @@
 //! mime_to_ext image/png      # → png
 //! mime_to_ext png            # → image/png
 //! mime_to_ext invalid        # → ?
+//! mime_to_ext mp1            # → audio/mpeg
+//! mime_to_ext audio/mpeg     # → mp3, mp1, mp2
 //! ```
 //!
 //! # Uninstall
@@ -52,9 +58,12 @@ fn main() {
     };
 
     let out = if arg.contains('/') {
-        mime_to_ext(&arg).unwrap_or("?")
+        match mime_to_ext(&arg) {
+            Some(exts) => exts.join(", "),
+            None => "?".to_string(),
+        }
     } else {
-        ext_to_mime(&arg).unwrap_or("?")
+        ext_to_mime(&arg).unwrap_or("?").to_string()
     };
     println!("{}", out);
 }

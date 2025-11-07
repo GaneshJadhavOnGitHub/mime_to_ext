@@ -1,6 +1,5 @@
 #![no_std]
-//! Zero-dependency, `no_std` + `alloc` lookup between MIME types and file
-//! extensions.
+//! no_std MIME ↔ extension lookup from embedded JSON, zero OS dependencies.
 //!
 //! The database is embedded once at compile time and lazily parsed on first
 //! use. All returned strings are `'static` and live for the entire program
@@ -11,26 +10,27 @@ use core::hash::BuildHasherDefault;
 use hashbrown::HashMap;
 use once_cell::sync::Lazy;
 
-/// Return the preferred file extension (without leading dot) for a MIME type.
+/// Return the file extensions (without leading dot) for a MIME type.
 ///
-/// `None` is returned when
+/// Returns `None` if
 /// - the MIME type is unknown,
-/// - the JSON database failed to parse, or
+/// - the embedded JSON database failed to parse (i.e. the crate was compiled
+///   with broken data), or
 /// - the entry exists but contains no extensions.
 ///
 /// # Example
 /// ```
 /// # use mime_to_ext::mime_to_ext;
-/// assert_eq!(mime_to_ext("image/png"), Some("png"));
+/// assert_eq!(mime_to_ext("image/png"), Some(&["png"][..]));
 /// assert_eq!(mime_to_ext("foo/bar"), None);
-/// ```
-pub fn mime_to_ext(mime: &str) -> Option<&'static str> {
+/// assert_eq!(mime_to_ext("audio/mpeg"), Some(&["mp3", "mp1", "mp2"][..]));
+/// ``````
+pub fn mime_to_ext(mime: &str) -> Option<&'static [&'static str]> {
     match cache::DB.as_ref() {
-        Ok(db) => db.get(mime).and_then(|v| v.first()).map(|s| s.as_str()),
-        Err(_) => None,
+        Some(db) => db.get(mime).map(|v| v.as_slice()),
+        None => None,
     }
 }
-
 /// Return the canonical MIME type for a file extension.
 ///
 /// `None` is returned when
@@ -43,53 +43,52 @@ pub fn mime_to_ext(mime: &str) -> Option<&'static str> {
 /// assert_eq!(ext_to_mime("png"), Some("image/png"));
 /// assert_eq!(ext_to_mime("QQQ"), None);
 /// ```
-// Single upfront inversion is faster than scanning the map on every call.
+/// Inverted map built once at first call; speed > allocations.
 #[allow(clippy::type_complexity)]
 pub fn ext_to_mime(ext: &str) -> Option<&'static str> {
-    static INV: Lazy<Result<HashMap<&'static str, &'static str, BuildHasherDefault<AHasher>>, ()>> =
+    static INV: Lazy<Option<HashMap<&'static str, &'static str, BuildHasherDefault<AHasher>>>> =
         Lazy::new(|| match cache::DB.as_ref() {
-            Ok(db) => {
+            Some(db) => {
                 let mut map = HashMap::with_hasher(BuildHasherDefault::<AHasher>::default());
-                for (mime, exts) in db.iter() {
-                    for e in exts {
-                        map.entry(e.as_str()).or_insert(mime.as_str());
+                for (&mime, exts) in db.iter() {
+                    for &e in exts {
+                        map.entry(e).or_insert(mime);
                     }
                 }
-                Ok(map)
+                Some(map)
             }
-            Err(_) => Err(()),
+            None => None,
         });
 
-    match &*INV {
-        Ok(m) => m.get(ext).copied(),
-        Err(_) => None,
-    }
-}
-
-/// Check whether the embedded JSON database was loaded successfully.
-///
-/// Returns `Ok(())` if the database parsed correctly, or `Err(())` if the
-/// embedded JSON was malformed.
-///
-/// This is a cheap runtime test; the actual parse happens only once inside
-/// `cache::DB`.
-///
-/// # Example
-/// ```
-/// # use mime_to_ext::db_status;
-/// assert!(db_status().is_ok());
-/// ```
-#[allow(clippy::result_unit_err)]
-pub fn db_status() -> Result<(), ()> {
-    match cache::DB.as_ref() {
-        Ok(_) => Ok(()),
-        Err(_) => Err(()),
+    match INV.as_ref() {
+        Some(map) => map.get(ext).copied(),
+        None => None,
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Tests that the embedded JSON database loads successfully.
+    /// If the JSON is malformed this test fails, preventing `cargo test` from passing.
+    #[test]
+    fn db_loads_successfully() {
+        assert!(
+            cache::DB.is_some(),
+            "embedded JSON database failed to parse"
+        );
+    }
+
+    /// Unit-test: MIME type that maps to several extensions.
+    ///
+    /// `audio/mpeg` is registered for more than one extension; the function
+    /// must return the **complete** slice in the same order stored in the JSON
+    /// database.
+    #[test]
+    fn mime_with_multiple_extensions() {
+        assert_eq!(mime_to_ext("audio/mpeg"), Some(&["mp3", "mp1", "mp2"][..]));
+    }
 
     /// Tests that the `mime_to_ext` and `ext_to_mime` functions return
     /// the correct values for known MIME types and extensions.
@@ -99,8 +98,9 @@ mod tests {
     #[test]
     fn lookup_works() {
         // JSON is present → must succeed
-        assert_eq!(mime_to_ext("image/png"), Some("png"));
+        assert_eq!(mime_to_ext("image/png"), Some(&["png"][..]));
         assert_eq!(ext_to_mime("png"), Some("image/png"));
+        assert_eq!(ext_to_mime("mp1"), Some("audio/mpeg"));
     }
 
     /// Tests that the `mime_to_ext` and `ext_to_mime` functions return
