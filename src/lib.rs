@@ -43,7 +43,7 @@ pub fn mime_to_ext(mime: &str) -> Option<&'static [&'static str]> {
 /// assert_eq!(ext_to_mime("png"), Some("image/png"));
 /// assert_eq!(ext_to_mime("QQQ"), None);
 /// ```
-/// Inverted map built once at first call; speed > allocations.
+// Inverted map built once at first call; speed > allocations.
 #[allow(clippy::type_complexity)]
 pub fn ext_to_mime(ext: &str) -> Option<&'static str> {
     static INV: Lazy<Option<HashMap<&'static str, &'static str, BuildHasherDefault<AHasher>>>> =

@@ -1,13 +1,13 @@
 [package]
 name = "mime_to_ext"
-version = "0.1.11"
+version = "0.1.12"
 edition = "2024"
 authors = ["Ganesh Kamlakar Jadhav <ganesh.jadhav16986@gmail.com>"]
-description = "no_std MIME↔extension lookup from embedded JSON, no OS files"
+description = "no_std MIME ↔ extension lookup from embedded JSON, no OS files"
 repository = "https://github.com/GaneshJadhavOnGitHub/mime_to_ext"
 license = "MIT OR Apache-2.0"
-keywords = ["mime", "extension", "content-type", "lookup"]
-categories = ["encoding", "parser-implementations"]
+keywords = ["mime", "extension", "lookup", "filesystem" , "media-types"]
+categories = ["Filesystem" , "Web Programming", "Parser-implementations"]
 readme = "README.md"
 homepage = "https://github.com/GaneshJadhavOnGitHub/mime_to_ext"
 documentation = "https://docs.rs/mime_to_ext/latest/mime_to_ext/"
@@ -26,16 +26,16 @@ serde_json = { version = "1", default-features = false, features = ["alloc"] }
 once_cell = { version = "1.21", default-features = false, features = ["critical-section"] }
 hashbrown = { version = "0.14.5", default-features = false, features = ["serde", "ahash"] }
 ahash = { version = "0.8", default-features = false }
+critical-section = { version = "1.2", optional = true }
 
 [[example]]
 name = "mime_to_ext"
 required-features = ["std"]
 
 [features]
+default = ["cs-impl"]
+cs-impl = ["critical-section/std"]   # pulls in the std impl
 std = [] 
-
-[dev-dependencies]
-critical-section = { version = "1.2", features = ["std"] }
 
 [build-dependencies]
 serde_json = { version = "1", default-features = false, features = ["alloc"] }
