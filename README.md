@@ -2,8 +2,8 @@
 
 ![Rust 1.85+](https://img.shields.io/badge/rust-1.85+-orange.svg)
 ![no_std](https://img.shields.io/badge/no__std-compatible-green.svg)
+[![Crates.io](https://img.shields.io/crates/v/mime_to_ext)](https://crates.io/crates/mime_to_ext)
 [![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/GaneshJadhavOnGitHub/mime_to_ext)
-[![Crates.io](https://img.shields.io/badge/Crates.io-000000?logo=rust&logoColor=white)](https://crates.io/crates/mime_to_ext)
 [![Docs.rs](https://img.shields.io/badge/Docs.rs-000000?logo=docs.rs&logoColor=white)](https://docs.rs/mime_to_ext/latest)
 
 
@@ -14,14 +14,14 @@ MSRV: 1.85 (2024 edition)
 
 #### 🏷️ Crate Overview
 
-> **mime_to_ext** is a no_std + alloc crate that ships an embedded, lazily-loaded JSON mapping of verified MIME-type ↔ extension pairs, giving you robust, cross-platform runtime lookup without touching OS mime files.
+> **mime_to_ext** is a no_std crate that ships an embedded, lazily-loaded JSON mapping of verified MIME-type ↔ extension pairs, giving you robust, cross-platform runtime lookup without touching OS mime files.
 > Unlike other crates that rely on system files or partial datasets, `mime_to_ext` offers one of the most complete MIME–extension mappings available in Rust — covering more than **1,100 MIME entries** from diverse, reputable sources.
 
 ---
 
 ####  Why `mime_to_ext`?
 
->Most crates that handle MIME lookups rely on operating systems's limited datasets which can lead to missing mappings.
+>Most crates that handle MIME lookups rely on operating system's limited datasets which can lead to missing mappings.
 >
 > `mime_to_ext` eliminates this by combining data from multiple independent and widely used MIME databases into a single unified dataset.
 >
@@ -42,45 +42,30 @@ MSRV: 1.85 (2024 edition)
 ---
 
 
-### Using in a `std` project
+### Usage
 
 Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mime_to_ext = "0.1.11"
-critical-section = { version = "1.2", features = ["std"] }
+mime_to_ext = "0.1.12"
 ```
-### Using in a `no_std` project
 
-Include the crate as usual and pick **one** `critical-section` backend appropriate for your target:
-
-```toml
-[dependencies]
-mime_to_ext = "0.1.11"
-# Examples – choose only the line that matches your chip:
-critical-section = { version = "1.2", features = ["cortex-m"] }  # Cortex-M3/M4/M7
-critical-section = { version = "1.2", features = ["riscv"] }    # RISC-V with atomics
-```
-If you already use a HAL (hardware-abstraction-layer) crate for your board,
-you usually don’t need to add anything—your HAL already enables the correct
-`critical-section` backend.
-
-## Usage Example (std project)
+## Example 
 
 ```rust
 
 use mime_to_ext::{mime_to_ext, ext_to_mime};
 
 fn main() {
-    // MIME → all extensions
+    // MIME → All extensions
     if let Some(exts) = mime_to_ext("audio/mpeg") {
         println!("Extensions for audio/mpeg: {}", exts.join(", "));
     } else {
         println!("No extensions found for audio/mpeg");
     }
 
-    // extension → single canonical MIME type
+    // Extension → Single canonical MIME type
     if let Some(mime) = ext_to_mime("png") {
         println!("The MIME type for .png is: {}", mime);
     } else {
