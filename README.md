@@ -28,7 +28,7 @@ MSRV: 1.85 (2024 edition)
 > This approach ensures:
 >
 > * **Cross-platform reliability** - No dependency on operating systems's limited datasets
-> * **Broadest coverage** - Over *1,100 verified MIME–extension pairs*
+> * **Broadest coverage** - Over *1,100 comprehensive MIME–extension pairs*
 > * **Runtime lookups** - Without I/O overhead as the dataset is already embedded
 
 
@@ -48,7 +48,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mime_to_ext = "0.1.12"
+mime_to_ext = "0.1.13"
 ```
 
 ## Example 
@@ -93,6 +93,18 @@ assert_eq!(ext_to_mime("qqq"), None);
 📚 Documentation: [Docs.rs](https://docs.rs/mime_to_ext/latest)
 
 
-## License
+## License and Data Integrity
 
-Licensed under either of **Apache-2.0** or **MIT**.
+This project is dual-licensed under the **Apache-2.0** or **MIT** license, at your option.
+
+### Data Standards & Stability
+
+The mapping dataset in `mime_to_ext` is aggregated from multiple reputable upstream sources and processed using automated techniques to ensure the broadest possible coverage. While we strive for high precision and consistency, these mappings are provided on an **as-is** and **best-effort** basis.
+
+As media types and file extensions evolve, the output of this crate may be updated in future releases to ensure continued alignment with industry standards. 
+
+Users are encouraged to:
+* **Perform downstream validation** if their application requires absolute cryptographic or mission-critical certainty.
+* **Always use the latest version** of this crate to ensure you are benefiting from the most recent data updates.
+
+We actively welcome community contributions to help **expand and update the dataset**, ensuring this resource remains the most comprehensive tool for the Rust ecosystem.
