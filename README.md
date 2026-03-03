@@ -8,26 +8,26 @@
 
 
 
-no_std MIME ↔ extension lookup using lazily-loaded embedded JSON with no runtime dependency on OS mime files.
+```no_std```  MIME to extension (& vice versa) lookup using lazily-loaded embedded JSON with no runtime dependency on OS mime files.
 
 MSRV: 1.85 (2024 edition)
 
-#### 🏷️ Crate Overview
+####   Crate Overview
 
-> **mime_to_ext** is a no_std crate that ships an embedded, lazily-loaded JSON mapping of verified MIME-type ↔ extension pairs, giving you robust, cross-platform runtime lookup without touching OS mime files.
-> Unlike other crates that rely on system files or partial datasets, `mime_to_ext` offers one of the most complete MIME–extension mappings available in Rust — covering more than **1,100 MIME entries** from diverse, reputable sources.
+> **mime_to_ext** is a ```no_std``` crate that ships an embedded, lazily-loaded JSON mapping of comprehensive MIME-type ↔ extension pairs, giving you robust, cross-platform runtime lookup without touching OS mime files.
+> Unlike other crates that rely on the system files or partial datasets, `mime_to_ext` offers one of the most complete MIME–extension mappings available in Rust — covering more than **1,100 MIME entries** from diverse sources.
 
 ---
 
 ####  Why `mime_to_ext`?
 
->Most crates that handle MIME lookups rely on operating system's limited datasets which can lead to missing mappings.
+>Most crates that handle MIME lookups rely on the operating systems' limited datasets which can lead to missing mappings.
 >
 > `mime_to_ext` eliminates this by combining data from multiple independent and widely used MIME databases into a single unified dataset.
 >
 > This approach ensures:
 >
-> * **Cross-platform reliability** - No dependency on operating systems's limited datasets
+> * **Cross-platform reliability** - No dependency on operating systems' limited datasets
 > * **Broadest coverage** - Over *1,100 comprehensive MIME–extension pairs*
 > * **Runtime lookups** - Without I/O overhead as the dataset is already embedded
 
@@ -35,9 +35,9 @@ MSRV: 1.85 (2024 edition)
 
 ---
 
-#### ⚙️ How it works 
+####   How it works 
 
-> The crate uses a precompiled JSON database that merges and normalizes data from several trusted MIME registries and open datasets. The merging process removes duplicates, resolves conflicts, and standardizes both MIME types and extensions to provide clean bidirectional lookup — all accessible at runtime.
+> The crate uses a precompiled JSON database that merges and normalizes data from several MIME registries and open datasets. The merging process removes duplicates, resolves conflicts, and standardizes both MIME types and extensions to provide clean bidirectional lookup — all accessible at runtime.
 
 ---
 
@@ -48,7 +48,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mime_to_ext = "0.1.13"
+mime_to_ext = "0.1.14"
 ```
 
 ## Example 
@@ -95,7 +95,7 @@ assert_eq!(ext_to_mime("qqq"), None);
 
 ## License and Data Integrity
 
-This project is dual-licensed under the **Apache-2.0** or **MIT** license, at your option.
+This project is dual-licensed under the **Apache-2.0** or **MIT** license.
 
 ### Data Standards & Stability
 
@@ -104,7 +104,7 @@ The mapping dataset in `mime_to_ext` is aggregated from multiple reputable upstr
 As media types and file extensions evolve, the output of this crate may be updated in future releases to ensure continued alignment with industry standards. 
 
 Users are encouraged to:
-* **Perform downstream validation** if their application requires absolute cryptographic or mission-critical certainty.
+* **Perform downstream validation** if their application requires absolute data integrity or mission-critical certainty.
 * **Always use the latest version** of this crate to ensure you are benefiting from the most recent data updates.
 
 We actively welcome community contributions to help **expand and update the dataset**, ensuring this resource remains the most comprehensive tool for the Rust ecosystem.
